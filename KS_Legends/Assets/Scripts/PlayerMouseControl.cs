@@ -26,6 +26,20 @@ public class PlayerMouseControl : MonoBehaviour
 
     private void Update()
     {
+        if (!PlayerHealth.isAlive)
+            return;
+        
+        if (Input.GetMouseButton(1))
+        {
+            targetPosition = GetTargetPosition();
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            LookAtFlat(GetTargetPosition());
+            animator.SetTrigger("chop");
+        }
+        
         float distToTarget = Vector3.Distance(transform.position, targetPosition);
         if (distToTarget > 0.1f)
         {
@@ -34,22 +48,17 @@ public class PlayerMouseControl : MonoBehaviour
             
             animator.SetBool("running", true);
             
-            LookAtFlat();
+            LookAtFlat(targetPosition);
         }
         else
         {
             animator.SetBool("running", false);
         }
-        
-        if (Input.GetMouseButton(0))
-        {
-            targetPosition = GetTargetPosition();
-        }
     }
 
-    private void LookAtFlat()
+    private void LookAtFlat(Vector3 lookTarget)
     {
-        lookPosition = targetPosition;
+        lookPosition = lookTarget;
         lookPosition.y = transform.position.y;
         transform.LookAt(lookPosition);
     }
