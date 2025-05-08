@@ -5,21 +5,23 @@ using UnityEngine;
 
 public class PlayerAttacks : MonoBehaviour
 {
-    [SerializeField] private Collider weaponCollider;
+    [SerializeField] private Collider[] weaponColliders;
 
     
     private void Awake()
     {
-        weaponCollider.enabled = false;
+        AttackEnd();
     }
     
     public void AttackStart()
     {
-        weaponCollider.enabled = true;    
+        foreach(Collider col in weaponColliders)
+            col.enabled = true;
     }
 
     public void AttackEnd()
     {
-        weaponCollider.enabled = false;
+        foreach(Collider col in weaponColliders)
+            col.enabled = false;
     }
 }

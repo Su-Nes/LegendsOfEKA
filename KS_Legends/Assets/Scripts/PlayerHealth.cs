@@ -2,16 +2,18 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
-    [SerializeField] private int startHealth = 100;
+    [SerializeField] private float startHealth = 100;
     [SerializeField] private float timeBetweenHits = 1f;
     private float lastHitTime;
     
-    private int currentHealth;
-    public int CurrentHealth
+    private float currentHealth;
+    public float CurrentHealth
     {
         get { return currentHealth; }
         set { currentHealth = value < 0 ? 0 : value; if(currentHealth <= 0) {currentHealth = 0; Die(); } }
     }
+    
+    public float MaxHealth { get { return startHealth; } }
     
     public static bool isAlive = true;
 

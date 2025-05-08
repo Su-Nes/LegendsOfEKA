@@ -6,6 +6,8 @@ public class EnemyHealth : MonoBehaviour
 {
     [SerializeField] private int startHealth = 100;
     [SerializeField] private float timeBetweenHits = 1f;
+    [SerializeField] private Collider[] weaponColliders;
+    [SerializeField] private float XPReward = 15f;
     private float lastHitTime;
     
     private int currentHealth;
@@ -14,9 +16,12 @@ public class EnemyHealth : MonoBehaviour
         get { return currentHealth; }
         set { currentHealth = value < 0 ? 0 : value; if(currentHealth <= 0) {currentHealth = 0; Die(); } }
     }
-    
-    private bool isAlive = true;
 
+    public bool IsDead()
+    {
+        return currentHealth <= 0;
+    }
+    
     private void Start()
     {
         currentHealth = startHealth;
@@ -30,9 +35,21 @@ public class EnemyHealth : MonoBehaviour
         }
     }
 
+    public void EnableWeapons()
+    {
+        foreach(Collider col in weaponColliders)
+            col.enabled = true;
+    }
+
+    public void DisableWeapons()
+    {
+        foreach(Collider col in weaponColliders)
+            col.enabled = false;
+    }
+
     public void TakeDamage(int damage)
     {
-        if (!isAlive)
+        if (IsDead())
             return;
         
         GetComponent<Animator>().SetTrigger("hurt");
@@ -43,8 +60,8 @@ public class EnemyHealth : MonoBehaviour
 
     private void Die()
     {
-        GetComponent<EnemyNavigation>().enabled = false;
         GetComponent<Animator>().SetBool("dead", true);
-        isAlive = false;
+        PlayerXP.CallOnGetXP(XPReward);
+        DisableWeapons();
     }
 }
